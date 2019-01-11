@@ -23,7 +23,7 @@ int main() {
       }
       
       pyne::Material pyne_mat = G4_2_Pyne_Material(g4mat);
-
+      std::cout << pyne_mat.mass << std::endl;
   }
 
 }
