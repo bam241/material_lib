@@ -21,9 +21,11 @@ int main() {
       double Z = (g4_mat->GetZ());
       std::cout << "Z: " << Z << std::endl;
       }
+      
+      pyne::Material pyne_mat = G4_2_Pyne_Material(g4mat);
+
   }
 
-  pyne::Material* pyne_mat = new pyne::Material();
 }
 
 
@@ -39,11 +41,24 @@ pyne::Material G4_2_Pyne_Material(G4Material* g4mat){
     else {
       int Z = G4it->first->GetZ();
       int A = G4it->first->GetA();
-      
-      Pmat
+      comp_map pyne_element;
+      pyne_element.inssert( pair<int,double>(pyne_nucid(Z,A),1.));
+
+      Pmat += pyne::Material(pyne_element, G4it->second);
     }
 
   }
 
+  return Pmat;
+
+
+}
+
+
+int pyne_nucid(int Z, int A, int I=0){
+
+// ZZZAAASSSS
+
+  return I + A*10000 + Z*10000000;
 
 }
