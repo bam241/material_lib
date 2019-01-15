@@ -1,7 +1,24 @@
 from pyne.material import MaterialLibrary
 
+"""
+
+This script allows to merge multiple PyNE material hdf5 file into a single one.
+"""
 
 def merge_material_library(merged_libname, matlibs, datapaths=[], nucpaths=[]):
+    """ Merge the different hdf5 PyNE material libraries into a single one and
+    write the merged library in hdf5 format
+
+    Parameters:
+    merged_libname (str): name of the new library
+    matlibs ([str]): list of the material library name to be merged
+    datapaths ([str] -- optional ): list of the datapath for each library to
+    merge, using \"/materials\" as default
+    nucpaths ([str] -- optional ): list of the nucpath for each library to
+    merge, using \"/nucid\" as default
+
+    """
+
 
     if len(datapaths) == 0:
         print("No datapaths provided, using \"/Materials\" as default.")
@@ -27,3 +44,5 @@ def merge_material_library(merged_libname, matlibs, datapaths=[], nucpaths=[]):
 
     merged_mat_library.write_hdf5(
         merged_libname, datapath="/materials", nucpath="/nucid")
+
+
