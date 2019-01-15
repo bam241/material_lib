@@ -1,22 +1,41 @@
+#include "mat_lib_builder.h"
+
 #include <iostream>
 #include <vector>
 
 // HDF5
 //#include "h5wrap.h"
 
-// PyNE
-#include <material.h>
+int main() {
+  std::string filename = "mat_lib.h5m";
+  std::string datapath = "/materials";
+  std::string nucpath = "/nucid";
 
-// G4
-#include <G4NistElementBuilder.hh>
-#include <G4Types.hh>
-#include <G4UnitsTable.hh>
-#include "G4NistManager.hh"
+  // PyNE containers
+  std::vector<pyne::Material> pyne_material_vec;
+  std::set<int> nuclides;
 
-typedef std::map<int, double> comp_map;
-typedef comp_map::iterator comp_iter;
+  // G4 containers
+  G4NistManager* manager = G4NistManager::Instance();
+  std::vector<G4String> mat_list = manager->GetNistMaterialNames();
 
-int pyne_nucid(int Z, int A, int I = 0) {
+  for (int i = 0; i < mat_list.size(); i++) {
+    G4Material* g4_mat = manager->FindOrBuildMaterial(mat_list[i]);
+    double density = (g4_mat->GetDensity()) * CLHEP::cm3 / CLHEP::g;
+
+    pyne::Material pyne_mat = G4_2_Pyne_Material(g4_mat);
+    pyne_mat.metadata["name"] = g4_mat->GetName();
+    pyne_mat.metadata["density"] = std::to_string(density);
+    pyne_material_vec.push_back(pyne_mat);
+    append_to_nuclide_set(nuclides, pyne_mat.comp);
+  }
+
+  write_nucids(filename, nucpath, nuclides);
+
+  write_mats(filename, datapath, nucpath, pyne_material_vec);
+}
+
+int pyne_nucid(int Z, int A, int I) {
   // ZZZAAASSSS
 
   return I + A * 10000 + Z * 10000000;
@@ -30,16 +49,22 @@ pyne::Material G4_2_Pyne_Material(G4Material* G4mat) {
     int Z = G4elements[i]->GetZ();
     int A = G4elements[i]->GetA();
     if (A < 0) {
+      comp_map pyne_element;
       for (auto j = Z; j < Z * 3; j++) {
-        comp_map pyne_element;
         double abondance = pyne::natural_abund(pyne_nucid(Z, j));
-
         if (abondance > 0) {
           pyne_element.insert(
-              std::pair<int, double>(pyne_nucid(Z, A), abondance));
-          Pmat = Pmat + pyne::Material(pyne_element, G4Frac[i]);
+              std::pair<int, double>(pyne_nucid(Z, j), abondance));
         }
       }
+      Pmat = Pmat + pyne::Material(pyne_element, G4Frac[i]);
+    }
+    else {
+      comp_map pyne_element;
+      pyne_element.insert(
+         std::pair<int, double>(pyne_nucid(Z, A), 1));
+      Pmat = Pmat + pyne::Material(pyne_element, G4Frac[i]);
+      
     }
   }
 
@@ -94,30 +119,10 @@ void append_to_nuclide_set(std::set<int>& nuclide_set,
   }
 }
 
-int main() {
-  std::string filename = "mat_lib.h5m";
-  std::string datapath = "/materials";
-  std::string nucpath = "/nucid";
+void write_mats(std::string filename, std::string datapath,
+                std::string nucpath, std::vector<pyne::Material> materials) {
+  for (auto i = 0; i < materials.size(); i++) {
+    materials[i].write_hdf5(filename, datapath, nucpath);
   
-  // PyNE containers
-  std::vector<pyne::Material> pyne_material_lib;
-  std::set<int> nuclides;
-  
-  // G4 containers
-  G4NistManager* manager = G4NistManager::Instance();
-  std::vector<G4String> mat_list = manager->GetNistMaterialNames();
-
-  for (int i = 0; i < mat_list.size(); i++) {
-    G4Material* g4_mat = manager->FindOrBuildMaterial(mat_list[i]);
-    double density = (g4_mat->GetDensity()) * CLHEP::cm3 / CLHEP::g;
-
-    pyne::Material pyne_mat = G4_2_Pyne_Material(g4_mat);
-    pyne_mat.metadata["name"] = g4_mat->GetName();
-    pyne_mat.metadata["density"] = std::to_string(density);
-    pyne_material_lib.push_back(pyne_mat);
-    append_to_nuclide_set(nuclides, pyne_mat.comp);
   }
-
-  write_nucids(filename, nucpath, nuclides);
-
 }
