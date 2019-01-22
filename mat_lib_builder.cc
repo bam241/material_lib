@@ -3,8 +3,6 @@
 #include <iostream>
 #include <vector>
 
-// HDF5
-//#include "h5wrap.h"
 
 int main() {
   std::string filename = "mat_lib.h5m";
@@ -36,18 +34,20 @@ int main() {
 }
 
 int pyne_nucid(int Z, int A, int I) {
-  // ZZZAAASSSS
-
+  // ZZZAAASSSS nuclide name
   return I + A * 10000 + Z * 10000000;
 }
 
+// Convert a G4_material into a PyNE_material
 pyne::Material G4_2_Pyne_Material(G4Material* G4mat) {
   pyne::Material Pmat = pyne::Material();
   const G4ElementVector G4elements = *G4mat->GetElementVector();
   const G4double* G4Frac = G4mat->GetFractionVector();
+  // Loop over List of elements
   for (auto i = 0; i < G4mat->GetNumberOfElements(); i++) {
     int Z = G4elements[i]->GetZ();
     int A = G4elements[i]->GetA();
+    // If not nuclide are there fill up with natural abondance
     if (A < 0) {
       comp_map pyne_element;
       for (auto j = Z; j < Z * 3; j++) {
@@ -58,19 +58,18 @@ pyne::Material G4_2_Pyne_Material(G4Material* G4mat) {
         }
       }
       Pmat = Pmat + pyne::Material(pyne_element, G4Frac[i]);
-    }
-    else {
+    } else {
+      // If single element add it.
       comp_map pyne_element;
-      pyne_element.insert(
-         std::pair<int, double>(pyne_nucid(Z, A), 1));
+      pyne_element.insert(std::pair<int, double>(pyne_nucid(Z, A), 1));
       Pmat = Pmat + pyne::Material(pyne_element, G4Frac[i]);
-      
     }
   }
 
   return Pmat;
 }
 
+// This piece is very much inspired by the PyNE::Material C++ API...
 void write_nucids(std::string filename, std::string nucpath,
                   std::set<int> nuclides) {
   int nuc_size;
@@ -119,10 +118,9 @@ void append_to_nuclide_set(std::set<int>& nuclide_set,
   }
 }
 
-void write_mats(std::string filename, std::string datapath,
-                std::string nucpath, std::vector<pyne::Material> materials) {
+void write_mats(std::string filename, std::string datapath, std::string nucpath,
+                std::vector<pyne::Material> materials) {
   for (auto i = 0; i < materials.size(); i++) {
     materials[i].write_hdf5(filename, datapath, nucpath);
-  
   }
 }
