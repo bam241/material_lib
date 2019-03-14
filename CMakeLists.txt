@@ -58,8 +58,8 @@ file(GLOB headers ${PROJECT_SOURCE_DIR}/*.hh)
 #----------------------------------------------------------------------------
 # Add the executable, and link it to the Geant4 libraries
 #
-add_executable(mat_lib_builder mat_lib_builder.cc mat_lib_builder.cc ${sources} ${headers})
-target_link_libraries(mat_lib_builder ${Geant4_LIBRARIES} ${LIBS_HDF5}
+add_executable(build_rsim_lib build_rsim_mat_lib.cc g4_to_pyne.cc mat_lib_merge.cc ${sources} ${headers})
+target_link_libraries(build_rsim_lib ${Geant4_LIBRARIES} ${LIBS_HDF5}
     ${PYNE_LIBS_DIR}/libpyne.dylib)
 
 
@@ -67,11 +67,11 @@ target_link_libraries(mat_lib_builder ${Geant4_LIBRARIES} ${LIBS_HDF5}
 # For internal Geant4 use - but has no effect if you build this
 # example standalone
 #
-add_custom_target(mat_lib DEPENDS mat_lib_builder)
+add_custom_target(mat_lib DEPENDS build_rsim_lib)
 
 #----------------------------------------------------------------------------
 # Install the executable to 'bin' directory under CMAKE_INSTALL_PREFIX
 #
-install(TARGETS mat_lib_builder DESTINATION bin)
+install(TARGETS build_rsim_lib DESTINATION bin)
 
 

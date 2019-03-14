@@ -1,12 +1,9 @@
-#include "mat_lib_builder.h"
+#include "g4_to_pyne.h"
 
 #include <iostream>
 #include <vector>
 
-
-
 pyne::MaterialLibrary build_g4_matlib() {
-  
   pyne::MaterialLibrary g4_mat_lib = pyne::MaterialLibrary();
   // PyNE containers
   std::vector<pyne::Material> pyne_material_vec;
@@ -63,4 +60,3 @@ pyne::Material G4_2_Pyne_Material(G4Material* G4mat) {
 
   return Pmat;
 }
-
