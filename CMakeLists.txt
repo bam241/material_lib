@@ -58,7 +58,7 @@ file(GLOB headers ${PROJECT_SOURCE_DIR}/*.hh)
 #----------------------------------------------------------------------------
 # Add the executable, and link it to the Geant4 libraries
 #
-add_executable(mat_lib_builder mat_lib_builder.cc ${sources} ${headers})
+add_executable(mat_lib_builder mat_lib_builder.cc mat_lib_builder.cc ${sources} ${headers})
 target_link_libraries(mat_lib_builder ${Geant4_LIBRARIES} ${LIBS_HDF5}
     ${PYNE_LIBS_DIR}/libpyne.dylib)
 
