@@ -18,8 +18,8 @@ pyne::MaterialLibrary build_g4_matlib() {
     double density = (g4_mat->GetDensity()) * CLHEP::cm3 / CLHEP::g;
 
     pyne::Material pyne_mat = G4_2_Pyne_Material(g4_mat);
-    pyne_mat.metadata["name"] = g4_mat->GetName();
-    pyne_mat.metadata["density"] = std::to_string(density);
+    //pyne_mat.metadata["name"] = g4_mat->GetName();
+    //pyne_mat.metadata["density"] = std::to_string(density);
     g4_mat_lib.add_material(pyne_mat);
   }
   return g4_mat_lib;

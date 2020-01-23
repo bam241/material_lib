@@ -25,9 +25,9 @@ pyne::MaterialLibrary set_namespace(pyne::MaterialLibrary lib, std::string name)
   pyne::matname_set mat_list = lib.get_keylist();
   for (auto it = mat_list.begin(); it != mat_list.end(); it++) {
     pyne::Material mat_tmp = lib.get_material(*it);
-    mat_tmp.metadata["name"] =
-        name + "_" +
-        mat_tmp.metadata["name"].asString();
+    //mat_tmp.metadata["name"] =
+    //    name + "_" +
+    //    mat_tmp.metadata["name"].asString();
     namespaced_lib.add_material(mat_tmp);
   }
   return namespaced_lib;
