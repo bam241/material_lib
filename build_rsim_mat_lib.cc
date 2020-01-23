@@ -8,11 +8,10 @@ int main() {
   pyne::MaterialLibrary pyne_lib = pyne::MaterialLibrary();
 
   pyne_lib.from_hdf5(
-      "/Users/mouginot/.local/lib/python3.5/site-packages/pyne/nuc_data.h5",
-      "/material_library/materials");
+      "/Users/mouginot/.local/lib/python3.6/site-packages/pyne/nuc_data.h5", "/material_library/materials" );
   pyne_lib = set_namespace(pyne_lib, "pyne");
   
   pyne_lib.merge(g4_lib);
-  pyne::matname_set my_name_set = pyne_lib.get_matlist();
+  pyne::matname_set my_name_set = pyne_lib.get_keylist();
   pyne_lib.write_hdf5("full_lib.h5m");
 }

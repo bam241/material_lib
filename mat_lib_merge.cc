@@ -11,7 +11,7 @@ pyne::MaterialLibrary merge(pyne::MaterialLibrary lib1,
                             std::string nucpath) {
   pyne::MaterialLibrary merged_lib = lib1;
 
-  pyne::matname_set mat_list2 = lib2.get_matlist();
+  pyne::matname_set mat_list2 = lib2.get_keylist();
   for (auto it = mat_list2.begin(); it != mat_list2.end(); it++) {
     pyne::Material mat_tmp = lib2.get_material(*it);
     merged_lib.add_material(mat_tmp);
@@ -22,7 +22,7 @@ pyne::MaterialLibrary merge(pyne::MaterialLibrary lib1,
 pyne::MaterialLibrary set_namespace(pyne::MaterialLibrary lib, std::string name) {
   pyne::MaterialLibrary namespaced_lib = pyne::MaterialLibrary();
 
-  pyne::matname_set mat_list = lib.get_matlist();
+  pyne::matname_set mat_list = lib.get_keylist();
   for (auto it = mat_list.begin(); it != mat_list.end(); it++) {
     pyne::Material mat_tmp = lib.get_material(*it);
     mat_tmp.metadata["name"] =
