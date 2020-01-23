@@ -13,5 +13,5 @@ int main() {
   
   pyne_lib.merge(g4_lib);
   pyne::matname_set my_name_set = pyne_lib.get_keylist();
-  pyne_lib.write_hdf5("full_lib.h5m" , "/material_library/materials");
+  pyne_lib.write_hdf5("full_lib.h5m" , "/material_library");
 }
