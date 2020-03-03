@@ -7,11 +7,18 @@ int main() {
 
   pyne::MaterialLibrary pyne_lib = pyne::MaterialLibrary();
 
-  pyne_lib.from_hdf5(
-      "/Users/mouginot/.local/lib/python3.6/site-packages/pyne/nuc_data.h5", "/material_library/materials" );
-  pyne_lib = set_namespace(pyne_lib, "pyne");
+    std::cout  << __LINE__ << std::endl;
+  pyne_lib.from_hdf5("/home/mouginot/work/material_test/materialibrary.h5", "/materials" );
+    std::cout  << __LINE__ << std::endl;
+  //pyne_lib = set_namespace(pyne_lib, "pyne");
+    std::cout  << __LINE__ << std::endl;
   
-  pyne_lib.merge(g4_lib);
+    std::cout  << __LINE__ << std::endl;
+  //pyne_lib.merge(g4_lib);
+    std::cout  << __LINE__ << std::endl;
   pyne::matname_set my_name_set = pyne_lib.get_keylist();
-  pyne_lib.write_hdf5("full_lib.h5m" , "/materials", "/nucid" );
+  std::cout << "SIZE " << my_name_set.size() << std::endl; 
+  std::cout  << __LINE__ << std::endl;
+  pyne_lib.write_hdf5("full_lib.h5m" , "/materials");
+    std::cout  << __LINE__ << std::endl;
 }

@@ -1,6 +1,5 @@
 // PyNE
-#include <material.h>
-#include <material_library.h>
+#include "pyne.h"
 
 pyne::MaterialLibrary merge(pyne::MaterialLibrary lib1,
                             pyne::MaterialLibrary lib2,

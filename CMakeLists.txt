@@ -18,10 +18,9 @@ include_directories(${PROJECT_SOURCE_DIR}/include)
 
 
 
-find_package(PyNE REQUIRED)
 
 
-include_directories(${PYNE_INCLUDE_DIR})
+#include_directories(${PYNE_INCLUDE_DIR})
 
 # Find HDF5
 MESSAGE("-- HDF5 Root: ${HDF5_ROOT}")
@@ -58,9 +57,8 @@ file(GLOB headers ${PROJECT_SOURCE_DIR}/*.hh)
 #----------------------------------------------------------------------------
 # Add the executable, and link it to the Geant4 libraries
 #
-add_executable(build_rsim_lib build_rsim_mat_lib.cc g4_to_pyne.cc mat_lib_merge.cc ${sources} ${headers})
-target_link_libraries(build_rsim_lib ${Geant4_LIBRARIES} ${LIBS_HDF5}
-    ${PYNE_LIBS_DIR}/libpyne.dylib)
+add_executable(build_rsim_lib pyne.cpp build_rsim_mat_lib.cc g4_to_pyne.cc mat_lib_merge.cc ${sources} ${headers})
+target_link_libraries(build_rsim_lib ${Geant4_LIBRARIES} ${LIBS_HDF5})
 
 
 #----------------------------------------------------------------------------

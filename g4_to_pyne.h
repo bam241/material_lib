@@ -1,8 +1,7 @@
 #ifndef _G4_TO_PYNE_
 #define _G4_TO_PYNE_
 // PyNE
-#include <material.h>
-#include <material_library.h>
+#include "pyne.h"
 
 // G4
 #include "G4NistManager.hh"
